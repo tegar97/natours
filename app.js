@@ -11,6 +11,7 @@ const helmet = require('helmet')
 const appError = require('./utils/appError')
 const globalErorrHandler = require('./controller/errorController')
 const cookieParser = require('cookie-parser')
+const compression = require('compression')
 app.use(morgan('dev'))
 
 app.use(express.json({limit : '10kb'}))
@@ -50,7 +51,7 @@ const reviewRouter = require('./route/reviewRouter')
 const viewRouter = require('./route/viewRouter')
 const bookingRouter = require('./route/bookingRouter')
 
-
+app.use(compression)
 const limiter = rateLimit ({
     max : 555,
     windowMs : 60 * 60 * 1000,

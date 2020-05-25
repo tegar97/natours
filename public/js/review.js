@@ -5,7 +5,7 @@ export const reviewForm = async(tourId,rating,review) =>{
     try {
         const res = await axios({
             method : 'POST',
-            url : `http://127.0.0.1:3000/api/v1/tours/${tourId}/reviews`,
+            url : `/api/v1/tours/${tourId}/reviews`,
             data : {
                 tourId,
                 rating,
@@ -29,7 +29,7 @@ export const deleteReview = async(reviewId) =>{
     try {
         const res = await axios({
             method : 'DELETE',
-            url : `http://127.0.0.1:3000/api/v1/review/${reviewId}`
+            url : `/api/v1/review/${reviewId}`
            
         })
         if(res.data.status == null){

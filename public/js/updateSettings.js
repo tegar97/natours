@@ -4,7 +4,7 @@ import {showAlert} from './alert'
 
 export const updateSettings = async(data,type) =>{
     try {
-        const url = type === 'password' ? 'http://127.0.0.1:3000/api/v1/users/updatePassword' : 'http://127.0.0.1:3000/api/v1/users/updateMe'
+        const url = type === 'password' ? '/api/v1/users/updatePassword' : '/api/v1/users/updateMe'
 
         const res = await axios({
             method : 'PATCH',
@@ -15,7 +15,7 @@ export const updateSettings = async(data,type) =>{
             showAlert('success',`${type.toUpperCase()} has been update`)
             
         }
-        console.log(res.data.status)
+        // console.log(res.data.status)
     } catch (err) {
         console.log(err)
         showAlert('error', err.response.data.message);

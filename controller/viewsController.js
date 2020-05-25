@@ -103,7 +103,7 @@ exports.MyTours = catchAsync(async(req,res,next) =>{
         fields: 'review rating user'
       });
     const review = await Reviews.findOne({tour : tour.id,user : req.user.id})
-    console.log(review)
+    // console.log(review)
     if(!tour) {
         return next(new AppError('Yo dont have tour with that name',404));
     }
