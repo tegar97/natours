@@ -12,6 +12,9 @@ router.get('/forgotPassword',viewsController.getForgotPasswordForm)
 router.get('/resetPassword/:token',viewsController.getResetPassword)
 router.get('/me',authController.protect,viewsController.getAccount)
 router.get('/myTours',authController.protect,viewsController.getMyTours)
+router.get('/myTours/:slug',authController.protect,viewsController.MyTours)
+router.get('/signup',viewsController.getSignUp)
+router.get('/verifyEmail/:token',authController.verifyEmail)
 
 // router.post('/submit-data-user',authController.isLoggedIn,viewsController.updateUserData)
 module.exports = router

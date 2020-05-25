@@ -51,7 +51,13 @@ const userSchema = new mongoose.Schema({
         type : Boolean,
         default : true,
         select : false
-    }
+    },
+    isVerif : {
+        type: Boolean,
+        default :false
+    },
+    emailVerifToken : String,
+    emailVerifExpire : Date
 })
 
 userSchema.pre('save',async function(next) {
@@ -60,6 +66,8 @@ userSchema.pre('save',async function(next) {
     this.password = await bcrypt.hash(this.password,12)
 
     this.passwordConfirm = undefined
+
+    this.emailVerifToken
     next()
 })
 
@@ -83,7 +91,7 @@ userSchema.methods.correctPassword = async function(
 userSchema.methods.changePasswordAfter = function(JWTTimestamp) {
     if(this.passwordChangeAt) {
         const changeTimeStamp = parseInt(this.passwordChangeAt.getTime() / 1000,10)
-        console.log(changeTimeStamp,JWTTimestamp);
+        // console.log(changeTimeStamp,JWTTimestamp);
         return JWTTimestamp < changeTimeStamp
 
     }
@@ -98,11 +106,14 @@ userSchema.methods.createPasswordResetToken = function() {
         .update(resetToken)
         .digest('hex')
      
-    console.log({resetToken},this.passwordResetToken)
+    // console.log({resetToken},this.passwordResetToken)
      this.passwordResetExpire = Date.now() + 10 * 60 * 1000
 
      return resetToken
 }
+
+
+
 userSchema.pre(/^find/,function(next) {
     this.find({active : {$ne : false}})
     next()

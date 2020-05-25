@@ -66,7 +66,12 @@ body {
   max-width: 120rem;
   margin: 0 auto;
 }
-
+.d-block {
+  display: inline-block;
+}
+.ml {
+  margin-left: 3rem !important;
+}
 .ma-bt-md {
   margin-bottom: 3rem !important;
 }
@@ -236,6 +241,10 @@ body {
 }
 .btn--green::after {
   background-color: #55c57a;
+}
+.btn--red {
+  background-color: #d9534f;
+  color: #fff;
 }
 
 .btn--small {
@@ -1271,6 +1280,20 @@ body {
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
+}
+.text__reguler__danger {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+  text-decoration: none;
+  color: #bb2124;
+  cursor: pointer;
+
+
+}
+.text__reguler__danger:hover{
+  color : #444
 }
 .text__reguler {
   display: block;

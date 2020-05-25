@@ -41,28 +41,36 @@ const createSendToken = (user,statusCode,res) =>{
 }
 
 exports.signup = catchAsync(async (req,res,next) =>{
+
+    const verifToken = crypto.randomBytes(32).toString('hex')
+
+    const emailVerifToken = crypto
+        .createHash('sha256')
+        .update(verifToken)
+        .digest('hex')
+     
+    // console.log({resetToken},this.passwordResetToken)
+     const emailVerifExpire = Date.now() + 10 * 60 * 1000
+  
     const newUser = await  User.create({
         name : req.body.name,
         email : req.body.email,
         password : req.body.password,
         role : req.body.role,
         passwordConfirm : req.body.passwordConfirm,
-        passwordChangeAt : req.body.passwordChangeAt
+        passwordChangeAt : req.body.passwordChangeAt,
+        emailVerifToken : emailVerifToken,
+        emailVerifExpire : emailVerifExpire
     })
-    const url = `${req.protocol}://${req.get("host")}/login`
+
+
+
+
+    const url = `${req.protocol}://${req.get("host")}/verifyEmail/${verifToken}`
     await new Email(newUser,url).sendWelcome()
     createSendToken(newUser,201,res)
-    // const token = jwt.sign({id : newUser._id},process.env.JWT_SECRET,{
-    //     expiresIn : process.env.JWT_EXPIRES_IN
-    // })
-
-    // res.status(201).json({
-    //     status : 'success',
-    //     token,
-    //     data :{
-    //         user : newUser
-    //     }
-    // })
+    
+   
 })
 
 exports.login =  catchAsync(async(req,res,next) =>{
@@ -220,7 +228,7 @@ exports.forgotPassword = catchAsync(async (req,res,next) =>{
             message : 'please check your email'
         })
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         user.passwordResetExpire = undefined,
         user.passwordResetToken = undefined 
         await user.save({validateBeforeSave: false})
@@ -272,3 +280,75 @@ exports.updatePassword = catchAsync(async(req,res,next) =>{
     
 })
 
+
+exports.verifyEmail = catchAsync (async(req,res) => {
+    //1. Get User based on the token
+    const token = req.params.token
+    const hashedToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex')
+   
+   
+   const user = await User.findOne({emailVerifToken : hashedToken ,emailVerifExpire :{$gt: Date.now()}})
+
+   if(!user) {
+       return res.redirect('/')
+   }
+   user.isVerif = true
+   user.emailVerifToken = undefined;
+   user.emailVerifExpire = undefined
+   await user.save()
+
+   if(req.cookies.jwt && req.cookies.jwt !== 'loggedout') {
+         return res.redirect('/me')
+   }else if(!req.cookies.jwt && req.cookies.jwt == 'loggedout'){
+         return res.redirect('/login')
+   }
+
+
+
+
+
+
+})
+
+exports.sendEmailVerifCurrent = catchAsync(async(req,res,next) => {
+    
+    const verifToken = crypto.randomBytes(32).toString('hex')
+
+    const emailVerifToken = crypto
+        .createHash('sha256')
+        .update(verifToken)
+        .digest('hex')
+     
+    // console.log({resetToken},this.passwordResetToken)
+     const emailVerifExpire = Date.now() + 10 * 60 * 1000
+     const userPreVerif = await User.findById(req.user.id)
+  
+      await  userPreVerif.update({
+        emailVerifToken : emailVerifToken,
+        emailVerifExpire : emailVerifExpire
+    })
+
+
+    const url = `${req.protocol}://${req.get("host")}/verifyEmail/${verifToken}`
+    await new Email(userPreVerif,url).sendWelcome()
+    res.status(200).json({
+        status: 'success'
+    })
+ 
+
+})
+
+exports.checkEmailVerify = catchAsync(async (req,res,next) => {
+    const user = await User.findById(req.user.id)
+    if(user.isVerify == true) {
+        return next()
+
+    }else{
+        res.redirect('/me')
+    }
+
+
+})

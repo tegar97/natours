@@ -87,17 +87,32 @@ block content
 
     section.section-cta
      .cta
-      .cta__img.cta__img--logo
-        img(src='/img/logo-white.png', alt='Natours logo')
-      img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='Tour Picture')
-      img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='Tour Picture')
-      .cta__content
-        h2.heading-secondary What are you waiting for?
-        p.cta__text= `${tour.duration} days . 1 adventure. Infinite memories. Make it yours today!`
-        if user
-         button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
-        else
-         a.btn.btn--green.span-all-rows(href="/login") Login
+       -if(review)
+            h2.heading-secondary.ma-bt-lg Your Review
+            form.form#form--review 
+                    .form__group
+                        label.form__label(for='email') Rating(1-5)
+                        input#rating.form__input(type="number",value=`${review.rating}`,readonly)
+                    .form__group
+                        label.form__label(for='email') Reviews
+                        textarea#review.form__input(readonly)= review.review
+                    .form__group    
+            button.btn.btn--green#btnReview(data-tourid=`${tour.id}`) Update Review
+            form.form#form--review__delete.d-block
+                     button.btn.btn--red.ml.btnDeleteReview(data-reviewid=`${review.id}`) Delete Review
+             
+       -else
+                h2.heading-secondary.ma-bt-lg what is your response to this tour?
+                form.form#form--review 
+                    .form__group
+                        label.form__label(for='email') Star(1-5)
+                        input#rating.form__input(type="number",required,max="5",min="1")
+                    .form__group
+                        label.form__label(for='email') Reviews
+                        textarea#review.form__input(required)
+                    .form__group    
+                        button.btn.btn--green#btnReview(data-tourid=`${tour.id}`) Submit
+
 
 
 

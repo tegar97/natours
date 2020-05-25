@@ -76,6 +76,7 @@ const limitForgotPassword = rateLimit ({
 app.use('api/v1/users/forgotPassword',limitForgotPassword)
 
 
+
 app.use(helmet())
 app.use('/',viewRouter)
 app.use('/api/v1/tours',tourRouter)

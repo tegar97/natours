@@ -5,7 +5,7 @@ const User = require('./../models/userModel')
 const Booking = require('./../models/bookingModels')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
-
+const Reviews = require('./../models/reviewModels')
 exports.getOverview = catchAsync(async(req,res) =>{
     const tours = await Tour.find()
 
@@ -90,8 +90,42 @@ exports.getMyTours = catchAsync(async(req,res,next) =>{
     const toursIDs = bookings.map(el => el.tour );
     const tours = await Tour.find({_id : {$in : toursIDs}})
 
-    res.status(200).render('overview',{
+    res.status(200).render('toursBooked',{
         title : 'My Tours',
         tours
     })
 })
+
+exports.MyTours = catchAsync(async(req,res,next) =>{
+    
+    const tour = await Tour.findOne({ slug: req.params.slug }).populate({
+        path: 'reviews',
+        fields: 'review rating user'
+      });
+    const review = await Reviews.findOne({tour : tour.id,user : req.user.id})
+    console.log(review)
+    if(!tour) {
+        return next(new AppError('Yo dont have tour with that name',404));
+    }
+
+   
+    res.status(200).render('tourBooked',{
+        title : `${tour.name} Tour`,
+        tour,
+        review
+        
+        
+    })
+ 
+
+    
+})
+
+
+exports.getSignUp = catchAsync((req,res) =>{
+    res.status(200).render('signup',{
+        title : 'Signup',
+        
+    })
+})
+

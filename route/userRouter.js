@@ -17,6 +17,8 @@ router.patch('/resetPassword/:token',authController.resetPassword)
 
 // Protetect all after this middleware
 router.use(authController.protect)
+//send email verification 
+router.patch('/sendEmailVerify',authController.sendEmailVerifCurrent)
 //updatePassword
 router.patch('/updatePassword',authController.updatePassword)
 //update current  data
