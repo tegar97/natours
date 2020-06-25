@@ -35,6 +35,7 @@ module.exports = class Email {
             firstName: this.firstName,
             url : this.url,
             subject
+            
         }
         );
         const mailOptions = {

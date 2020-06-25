@@ -51,7 +51,7 @@ const reviewRouter = require('./route/reviewRouter')
 const viewRouter = require('./route/viewRouter')
 const bookingRouter = require('./route/bookingRouter')
 
-app.use(compression)
+
 const limiter = rateLimit ({
     max : 555,
     windowMs : 60 * 60 * 1000,

@@ -138,7 +138,7 @@ if(deleteReviewBtn) {
     e.preventDefault()
     const btnDeleteReview = document.querySelector('.btnDeleteReview')
     const reviewId = btnDeleteReview.dataset.reviewid
-    console.log(reviewId)
+    // console.log(reviewId)
     deleteReview(reviewId)
   })
 }
