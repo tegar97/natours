@@ -78,12 +78,22 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
     
 }
 
-reviewSchema.post('save',function() {
-    this.constructor.calcAverageRatings(this.tour)
-})
-reviewSchema.post(/^findOneAnd/, async function(doc, next) {
-    await doc.constructor.calcAverageRatings(doc.tour);
+reviewSchema.post('save', function() {
+    // this points to current review
+    this.constructor.calcAverageRatings(this.tour);
+  });
+  
+  // findByIdAndUpdate
+  // findByIdAndDelete
+  reviewSchema.pre(/^findOneAnd/, async function(next) {
+    this.r = await this.findOne();
+    // console.log(this.r);
     next();
+  });
+  
+  reviewSchema.post(/^findOneAnd/, async function() {
+    // await this.findOne(); does NOT work here, query has already executed
+    await this.r.constructor.calcAverageRatings(this.r.tour);
   });
 reviewSchema.index({tour: 1,user: 1},{unique: true})
 // reviewSchema.pre(/^findOneAnd/, async function(next) {

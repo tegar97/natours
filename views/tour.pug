@@ -39,7 +39,7 @@ block content
             div
                 .overview-box__group
                     h2.heading-secondary.ma-bt-lg Quick facts
-                    - const date =  tour.startDates[0].toLocaleString('en-us',{month: 'long',year: 'numeric'})
+                    - const date =  tour.startDates[0].toLocaleString('en-us',{day : '2-digit',month: 'long',year: 'numeric'})
                     +overViewBox('Next data',date,'calendar')
                     +overViewBox('diffuculty',tour.difficulty,'trending-up')
                     +overViewBox('Participants',`${tour.maxGroupSize} people`,'user')
